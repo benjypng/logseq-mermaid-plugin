@@ -1,0 +1,28 @@
+{
+  "logseq": {
+    "id": "logseq-mermaid-plugin",
+    "title": "logseq-mermaid-plugin",
+    "icon": "./icon.svg"
+  },
+  "name": "logseq-mermaid-plugin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.html",
+  "targets": {
+    "main": false
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "parcel build --no-source-maps src/index.html --public-url ./"
+  },
+  "keywords": [],
+  "author": "hkgnp",
+  "license": "MIT",
+  "dependencies": {
+    "@logseq/libs": "^0.0.1-alpha.34",
+    "mermaid": "^8.14.0"
+  },
+  "devDependencies": {
+    "parcel": "^2.2.0"
+  }
+}
