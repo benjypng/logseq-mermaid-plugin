@@ -6,7 +6,7 @@ This simple plugin allows you to quickly insert mermaid diagrams in your notes.
 
 # Installation
 
-If not available in the marketplace, download the latest release and manually load it into Logseq after unzipping.
+If not available in the marketplace, [download the latest release](https://github.com/hkgnp/logseq-mermaid-plugin/releases) and manually load it into Logseq after unzipping.
 
 # Credits
 
