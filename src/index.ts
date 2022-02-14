@@ -43,10 +43,14 @@ const main = () => {
       async show() {
         await logseq.Editor.editBlock(payload.uuid);
         await logseq.Editor.exitEditingMode();
+
         const mermaidBlock = await logseq.Editor.getBlock(mermaidUUID);
+
+        const outcomeStr = await convert(mermaidBlock.content);
+
         await logseq.Editor.updateBlock(
           payload.uuid,
-          `${convert(mermaidBlock.content)}
+          `${outcomeStr}
 {{renderer ${type}}}`
         );
       },
