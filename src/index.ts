@@ -15,6 +15,7 @@ const main = () => {
     );
 
     const currBlock = await logseq.Editor.getCurrentBlock();
+
     await logseq.Editor.insertBlock(
       currBlock.uuid,
       `\`\`\`mermaid 
@@ -27,7 +28,7 @@ const main = () => {
   });
 
   logseq.App.onMacroRendererSlotted(async ({ slot, payload }) => {
-    const [type] = payload.arguments;
+    const [type, colour] = payload.arguments;
     const id = type.split('_')[1]?.trim();
     const mermaidId = `mermaid_${id}`;
 
@@ -46,7 +47,7 @@ const main = () => {
 
         const mermaidBlock = await logseq.Editor.getBlock(mermaidUUID);
 
-        const outcomeStr = await convert(mermaidBlock.content);
+        const outcomeStr = await convert(mermaidBlock.content, colour);
 
         await logseq.Editor.updateBlock(
           payload.uuid,
