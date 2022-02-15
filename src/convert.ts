@@ -19,32 +19,32 @@ export const renderMermaid = async (type, payload, colour, mermaidUUID) => {
     );
   };
 
-  const handleEvent = async (e) => {
-    if (e.currentTarget.response !== 'invalid encoded code') {
-      if (colour === undefined) {
-        renderBlock(`<img src="https://mermaid.ink/img/${jsonString}" />`);
-      } else if (colour.startsWith('#')) {
-        renderBlock(
-          `<img src="https://mermaid.ink/img/${jsonString}?bgColor=${colour.substring(
-            1
-          )}" />`
-        );
-      } else if (!colour.startsWith('#')) {
-        renderBlock(
-          `<img src="https://mermaid.ink/img/${jsonString}?bgColor=!${colour}" />`
-        );
-      } else {
-        renderBlock(`<img src="https://mermaid.ink/img/${jsonString}" />`);
-      }
-    } else {
-      renderBlock(
-        '<p>There is an error with your mermaid syntax. Please rectify and render again.</p>'
-      );
-    }
-  };
+  // const handleEvent = async (e) => {
+  // if (e.currentTarget.response !== 'invalid encoded code') {
+  if (colour === undefined) {
+    renderBlock(`<img src="https://mermaid.ink/img/${jsonString}" />`);
+  } else if (colour.startsWith('#')) {
+    renderBlock(
+      `<img src="https://mermaid.ink/img/${jsonString}?bgColor=${colour.substring(
+        1
+      )}" />`
+    );
+  } else if (!colour.startsWith('#')) {
+    renderBlock(
+      `<img src="https://mermaid.ink/img/${jsonString}?bgColor=!${colour}" />`
+    );
+  } else {
+    renderBlock(`<img src="https://mermaid.ink/img/${jsonString}" />`);
+  }
+  // } else {
+  // renderBlock(
+  // '<p>There is an error with your mermaid syntax. Please rectify and render again.</p>'
+  // );
+  // }
+  // };
 
-  let req = new XMLHttpRequest();
-  req.open('GET', `https://mermaid.ink/img/${jsonString}`, true);
-  req.send();
-  req.onload = handleEvent;
+  // let req = new XMLHttpRequest();
+  // req.open('GET', `https://mermaid.ink/img/${jsonString}`, true);
+  // req.send();
+  // req.onload = handleEvent;
 };
