@@ -33,9 +33,38 @@ or
 Define in your plugin settings file. This will apply to **all** mermaid diagrams that you render.
 
 ```
+%%{init: {'theme': 'dark'}}%%
+flowchart LR
+A[Hard] -->|Text| B(Round)
+B --> C{Decision}
+C -->|One| D[Result 1]
+C -->|Three| E[Result 2]
+```
+
+```
+%%{init: {'theme': 'dark'}}%%
+flowchart LR
+A[Hard] -->|Text| B(Round)
+B --> C{Decision}
+C -->|One| D[Result 1]
+C -->|Three| E[Result 2]
+```
+
+```
 {
-    "theme": '',
-    "colour": ''
+    "config": {
+        "theme": "dark",
+        "colour": "#2f3437"
+    }
+}
+
+or
+
+{
+    "config": {
+        "theme": "dark",
+        "colour": "gray"
+    }
 }
 ```
 

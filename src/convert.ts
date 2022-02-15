@@ -6,14 +6,14 @@ export const renderMermaid = async (type, payload, colour, mermaidUUID) => {
   const matchData = mermaidBlock.content.match(/```mermaid(.|\n)*?```/gm);
 
   let toDecode = matchData[0];
-  if (logseq.settings) {
-    toDecode = toDecode.replace(
-      '```mermaid',
-      `%%{init: { 'theme': ${logseq.settings.theme} } }%%`
-    );
-  } else {
-    toDecode = toDecode.replace('```mermaid', '').replace('```', '');
+
+  if (logseq.settings.config) {
+    const initStr = `\n%%{init: {'theme': '${logseq.settings.config.theme}'}}%%`;
+    toDecode = toDecode.slice(0, 10) + initStr + toDecode.slice(10);
   }
+
+  toDecode = toDecode.replace('```mermaid', '').replace('```', '');
+
   toDecode = toDecode.replace('\n', ' ');
 
   const jsonString = btoa(toDecode);
@@ -27,14 +27,16 @@ export const renderMermaid = async (type, payload, colour, mermaidUUID) => {
   };
 
   const handleEvent = async () => {
-    if (logseq.settings) {
-      if (logseq.settings.colour.startsWith('#')) {
+    if (logseq.settings.config) {
+      const { colour } = logseq.settings.config;
+
+      if (colour.startsWith('#')) {
         renderBlock(
           `<img src="https://mermaid.ink/img/${jsonString}?bgColor=${colour.substring(
             1
           )}" />`
         );
-      } else if (!colour.startsWith('#')) {
+      } else if (!logseq.settings.colour.startsWith('#')) {
         renderBlock(
           `<img src="https://mermaid.ink/img/${jsonString}?bgColor=!${colour}" />`
         );
