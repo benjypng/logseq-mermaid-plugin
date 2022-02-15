@@ -1,3 +1,5 @@
+[:heart: Sponsor this project on Github](https://github.com/sponsors/hkgnp)
+
 # Overview
 
 This simple plugin allows you to quickly insert mermaid diagrams in your notes.
