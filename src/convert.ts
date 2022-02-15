@@ -1,7 +1,9 @@
-export const convert = async (data: string, colour: string) => {
-  const matchData = data.match(/```mermaid(.|\n)*?```/gm);
+export const renderMermaid = async (type, payload, colour, mermaidUUID) => {
+  await logseq.Editor.editBlock(payload.uuid);
+  await logseq.Editor.exitEditingMode();
 
-  console.log(colour);
+  const mermaidBlock = await logseq.Editor.getBlock(mermaidUUID);
+  const matchData = mermaidBlock.content.match(/```mermaid(.|\n)*?```/gm);
 
   let toDecode = matchData[0];
   toDecode = toDecode.replace('```mermaid', '').replace('```', '');
@@ -9,28 +11,40 @@ export const convert = async (data: string, colour: string) => {
 
   const jsonString = btoa(toDecode);
 
-  let status = '';
-  await fetch(`https://mermaid.ink/img/${jsonString}`, { method: 'GET' })
-    .then((res) => {
-      if (res.ok) {
-        if (colour === undefined) {
-          status = `<img src="https://mermaid.ink/img/${jsonString}" />`;
-        } else if (colour.startsWith('#')) {
-          status = `<img src="https://mermaid.ink/img/${jsonString}?bgColor=${colour.substring(
+  const renderBlock = async (str: string) => {
+    await logseq.Editor.updateBlock(
+      payload.uuid,
+      `${str}
+{{renderer ${type}}}`
+    );
+  };
+
+  const handleEvent = async (e) => {
+    if (e.currentTarget.response !== 'invalid encoded code') {
+      if (colour === undefined) {
+        renderBlock(`<img src="https://mermaid.ink/img/${jsonString}" />`);
+      } else if (colour.startsWith('#')) {
+        renderBlock(
+          `<img src="https://mermaid.ink/img/${jsonString}?bgColor=${colour.substring(
             1
-          )}" />`;
-        } else if (!colour.startsWith('#')) {
-          status = `<img src="https://mermaid.ink/img/${jsonString}?bgColor=!${colour}" />`;
-        } else {
-          status = `<img src="https://mermaid.ink/img/${jsonString}" />`;
-        }
+          )}" />`
+        );
+      } else if (!colour.startsWith('#')) {
+        renderBlock(
+          `<img src="https://mermaid.ink/img/${jsonString}?bgColor=!${colour}" />`
+        );
       } else {
-        status = `<p>There is an error with your mermaid syntax. Please rectify and render again.</p>`;
+        renderBlock(`<img src="https://mermaid.ink/img/${jsonString}" />`);
       }
-    })
-    .catch((err) => console.log('Error:', err));
+    } else {
+      renderBlock(
+        '<p>There is an error with your mermaid syntax. Please rectify and render again.</p>'
+      );
+    }
+  };
 
-  const outcome = status;
-
-  return outcome;
+  let req = new XMLHttpRequest();
+  req.open('GET', `https://mermaid.ink/img/${jsonString}`, true);
+  req.send();
+  req.onload = handleEvent;
 };

@@ -1,5 +1,5 @@
 import '@logseq/libs';
-import { convert } from './convert';
+import { renderMermaid } from './convert';
 
 const uniqueIdentifier = () =>
   Math.random()
@@ -42,18 +42,7 @@ const main = () => {
 
     logseq.provideModel({
       async show() {
-        await logseq.Editor.editBlock(payload.uuid);
-        await logseq.Editor.exitEditingMode();
-
-        const mermaidBlock = await logseq.Editor.getBlock(mermaidUUID);
-
-        const outcomeStr = await convert(mermaidBlock.content, colour);
-
-        await logseq.Editor.updateBlock(
-          payload.uuid,
-          `${outcomeStr}
-{{renderer ${type}}}`
-        );
+        renderMermaid(type, payload, colour, mermaidUUID);
       },
     });
 
