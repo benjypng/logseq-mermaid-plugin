@@ -5,7 +5,7 @@
     "icon": "./icon.svg"
   },
   "name": "logseq-mermaid-plugin",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "",
   "main": "dist/index.html",
   "targets": {

@@ -8,7 +8,7 @@ export const convert = async (data: string) => {
   const jsonString = btoa(toDecode);
 
   let status = '';
-  await fetch(`https://mermaid.ink/img/${jsonString}`, { method: 'HEAD' })
+  await fetch(`https://mermaid.ink/img/${jsonString}`, { method: 'GET' })
     .then((res) => {
       if (res.ok) {
         status = `<img src="https://mermaid.ink/img/${jsonString}" />`;
