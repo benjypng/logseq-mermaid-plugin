@@ -6,7 +6,14 @@ export const renderMermaid = async (type, payload, colour, mermaidUUID) => {
   const matchData = mermaidBlock.content.match(/```mermaid(.|\n)*?```/gm);
 
   let toDecode = matchData[0];
-  toDecode = toDecode.replace('```mermaid', '').replace('```', '');
+  if (logseq.settings) {
+    toDecode = toDecode.replace(
+      '```mermaid',
+      `%%{init: { 'theme': ${logseq.settings.theme} } }%%`
+    );
+  } else {
+    toDecode = toDecode.replace('```mermaid', '').replace('```', '');
+  }
   toDecode = toDecode.replace('\n', ' ');
 
   const jsonString = btoa(toDecode);
@@ -20,7 +27,19 @@ export const renderMermaid = async (type, payload, colour, mermaidUUID) => {
   };
 
   const handleEvent = async () => {
-    if (colour === undefined) {
+    if (logseq.settings) {
+      if (logseq.settings.colour.startsWith('#')) {
+        renderBlock(
+          `<img src="https://mermaid.ink/img/${jsonString}?bgColor=${colour.substring(
+            1
+          )}" />`
+        );
+      } else if (!colour.startsWith('#')) {
+        renderBlock(
+          `<img src="https://mermaid.ink/img/${jsonString}?bgColor=!${colour}" />`
+        );
+      }
+    } else if (colour === undefined) {
       renderBlock(`<img src="https://mermaid.ink/img/${jsonString}" />`);
     } else if (colour.startsWith('#')) {
       renderBlock(

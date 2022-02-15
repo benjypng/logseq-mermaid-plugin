@@ -16,6 +16,8 @@ To start, simply trigger it using `/Draw mermaid diagram`. Then add your mermaid
 
 ## Changing background colour
 
+### Option 1
+
 Same steps as above, but before clicking `Render`, include the colour inside the renderer, e.g.
 
 ```
@@ -24,6 +26,17 @@ Same steps as above, but before clicking `Render`, include the colour inside the
 or
 
 {{renderer :mermaid_abc123, #000000}}
+```
+
+### Option 2
+
+Define in your plugin settings file. This will apply to **all** mermaid diagrams that you render.
+
+```
+{
+    "theme": '',
+    "colour": ''
+}
 ```
 
 # Credits
