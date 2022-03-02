@@ -1,4 +1,4 @@
-import { Base64 } from 'js-base64';
+import { toBase64 } from 'js-base64';
 
 export const renderMermaid = async (type, payload, colour, mermaidUUID) => {
   await logseq.Editor.editBlock(payload.uuid);
@@ -19,7 +19,8 @@ export const renderMermaid = async (type, payload, colour, mermaidUUID) => {
   toDecode = toDecode.replace('\n', ' ');
 
   // const jsonString = btoa(toDecode);
-  const jsonString = Base64.encode(toDecode, true);
+  const jsonString = toBase64(toDecode, true);
+  console.log(jsonString);
 
   const renderBlock = async (str: string) => {
     await logseq.Editor.updateBlock(
