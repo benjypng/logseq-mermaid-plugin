@@ -5,7 +5,7 @@
     "icon": "./icon.svg"
   },
   "name": "logseq-mermaid-plugin",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "",
   "main": "dist/index.html",
   "targets": {
@@ -20,6 +20,7 @@
   "license": "MIT",
   "dependencies": {
     "@logseq/libs": "^0.0.1-alpha.34",
+    "buffer": "^6.0.3",
     "js-base64": "^3.7.2"
   },
   "devDependencies": {

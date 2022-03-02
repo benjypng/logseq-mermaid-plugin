@@ -18,9 +18,7 @@ export const renderMermaid = async (type, payload, colour, mermaidUUID) => {
 
   toDecode = toDecode.replace('\n', ' ');
 
-  // const jsonString = btoa(toDecode);
   const jsonString = toBase64(toDecode, true);
-  console.log(jsonString);
 
   const renderBlock = async (str: string) => {
     await logseq.Editor.updateBlock(
