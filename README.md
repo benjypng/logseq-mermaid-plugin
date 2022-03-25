@@ -1,6 +1,7 @@
 [[:gift_heart: Sponsor this project on Github](https://github.com/sponsors/hkgnp) or [:coffee: Get me a coffee](https://www.buymeacoffee.com/hkgnp.dev) if you like this plugin!
 
-# Overview
+> Warning ⚠: This plugin uploads your diagrams to an external service for rendering. Do not use this plugin if you are not comfortable with this. 
+# Overviewr 
 
 This simple plugin allows you to quickly insert mermaid diagrams in your notes.
 
