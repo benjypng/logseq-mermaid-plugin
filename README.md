@@ -1,9 +1,10 @@
 [[:gift_heart: Sponsor this project on Github](https://github.com/sponsors/hkgnp) or [:coffee: Get me a coffee](https://www.buymeacoffee.com/hkgnp.dev) if you like this plugin!
 
-> Warning ⚠: This plugin uploads your diagrams to an external service for rendering. Do not use this plugin if you are not comfortable with this. 
-# Overviewr 
+> Important! ⚠: This plugin will send your mermaid code to an [ external server ](https://mermaid.ink) **if** you do not set up your own local mermaid.ink server. Instructions for setting up your own local mermaid.ink server can be found below.
 
-This simple plugin allows you to quickly insert mermaid diagrams in your notes.
+# Overviewr
+
+This simple plugin allows you to quickly insert mermaid diagrams in your notes, using either an external server or you have the option of setting up your own local one.
 
 ![](/screenshots/demo.gif)
 
@@ -34,24 +35,6 @@ or
 Define in your plugin settings file. This will apply to **all** mermaid diagrams that you render.
 
 ```
-%%{init: {'theme': 'dark'}}%%
-flowchart LR
-A[Hard] -->|Text| B(Round)
-B --> C{Decision}
-C -->|One| D[Result 1]
-C -->|Three| E[Result 2]
-```
-
-```
-%%{init: {'theme': 'dark'}}%%
-flowchart LR
-A[Hard] -->|Text| B(Round)
-B --> C{Decision}
-C -->|One| D[Result 1]
-C -->|Three| E[Result 2]
-```
-
-```
 {
     "config": {
         "theme": "dark",
@@ -68,6 +51,15 @@ or
     }
 }
 ```
+
+# Using with your own local mermaid.ink server
+
+1. Go to your terminal and navigate to where you would like to save the server files to, e.g. `cd ~/My\ Documents`
+2. Enter `git clone https://github.com/jihchi/mermaid.ink && cd mermaid.ink && npm i && npm start` (This assumes that you already have NodeJS installed).
+3. By default, your local mermaid.ink server will be running on port `3000`. This can be changed if you know what you are doing.
+4. In Logseq, go to your plugin settings, and enter `3000`. Close the settings box.
+   ![](/screenshots/mermaid-settings.png)
+5. Proceed to draw your mermaid diagrams as per the [instructions above](https://github.com/hkgnp/logseq-mermaid-plugin#usage), and the images will be generated locally.
 
 # Credits
 

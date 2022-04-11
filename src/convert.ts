@@ -1,6 +1,12 @@
-import { toBase64 } from 'js-base64';
+import { BlockUUID } from "@logseq/libs/dist/LSPlugin.user";
+import { toBase64 } from "js-base64";
 
-export const renderMermaid = async (type, payload, colour, mermaidUUID) => {
+export const renderMermaid = async (
+  type: string,
+  payload: { uuid: string },
+  colour: string,
+  mermaidUUID: BlockUUID
+) => {
   await logseq.Editor.editBlock(payload.uuid);
   await logseq.Editor.exitEditingMode();
 
@@ -14,9 +20,9 @@ export const renderMermaid = async (type, payload, colour, mermaidUUID) => {
     toDecode = toDecode.slice(0, 10) + initStr + toDecode.slice(10);
   }
 
-  toDecode = toDecode.replace('```mermaid', '').replace('```', '');
+  toDecode = toDecode.replace("```mermaid", "").replace("```", "");
 
-  toDecode = toDecode.replace('\n', ' ');
+  toDecode = toDecode.replace("\n", " ");
 
   const jsonString = toBase64(toDecode, true);
 
@@ -29,40 +35,61 @@ export const renderMermaid = async (type, payload, colour, mermaidUUID) => {
   };
 
   const handleEvent = async () => {
+    const handlePort = () => {
+      const { port } = logseq.settings;
+      if (port) {
+        return `http://localhost:${port}`;
+      } else {
+        return `https://mermaid.ink`;
+      }
+    };
+
     if (logseq.settings.config) {
       const { colour } = logseq.settings.config;
-
-      if (colour.startsWith('#')) {
+      // If mermaid config exists
+      if (colour.startsWith("#")) {
+        // If colour is a hexadecimal colour
         renderBlock(
-          `<img src="https://mermaid.ink/img/${jsonString}?bgColor=${colour.substring(
+          `<img src="${handlePort()}/img/${jsonString}?bgColor=${colour.substring(
             1
           )}" />`
         );
-      } else if (!logseq.settings.colour.startsWith('#')) {
+      } else if (!colour.startsWith("#")) {
+        // If colour is a plain colour description, e.g. blue
         renderBlock(
-          `<img src="https://mermaid.ink/img/${jsonString}?bgColor=!${colour}" />`
+          `<img src="${handlePort()}/img/${jsonString}?bgColor=!${colour}" />`
         );
+      } else {
+        // If error in config
+        renderBlock(`<img src="${handlePort()}/img/${jsonString}" />`);
       }
-    } else if (colour === undefined) {
-      renderBlock(`<img src="https://mermaid.ink/img/${jsonString}" />`);
-    } else if (colour.startsWith('#')) {
-      renderBlock(
-        `<img src="https://mermaid.ink/img/${jsonString}?bgColor=${colour.substring(
-          1
-        )}" />`
-      );
-    } else if (!colour.startsWith('#')) {
-      renderBlock(
-        `<img src="https://mermaid.ink/img/${jsonString}?bgColor=!${colour}" />`
-      );
+    } else if (colour) {
+      // If it is a local change of colour
+      if (colour.startsWith("#")) {
+        // If colour is a hexadecimal colour
+        renderBlock(
+          `<img src="${handlePort()}/img/${jsonString}?bgColor=${colour.substring(
+            1
+          )}" />`
+        );
+      } else if (!colour.startsWith("#")) {
+        // If colour is a plain colour description, e.g. blue
+        renderBlock(
+          `<img src="${handlePort()}/img/${jsonString}?bgColor=!${colour}" />`
+        );
+      } else {
+        // If error in config
+        renderBlock(`<img src="${handlePort()}/img/${jsonString}" />`);
+      }
     } else {
-      renderBlock(`<img src="https://mermaid.ink/img/${jsonString}" />`);
+      // If mermaid config does not exist
+      renderBlock(`<img src="${handlePort()}/img/${jsonString}" />`);
     }
   };
 
   const handleError = () => {
     renderBlock(
-      '<p>There is an error with your mermaid syntax. Please rectify and render again.</p>'
+      "<p>There is an error with your mermaid syntax. Please rectify and render again.</p>"
     );
   };
 

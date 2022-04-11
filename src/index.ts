@@ -1,15 +1,18 @@
-import '@logseq/libs';
-import { renderMermaid } from './convert';
+import "@logseq/libs";
+import { callSettings } from "./callSettings";
+import { renderMermaid } from "./convert";
 
 const uniqueIdentifier = () =>
   Math.random()
     .toString(36)
-    .replace(/[^a-z]+/g, '');
+    .replace(/[^a-z]+/g, "");
 
 const main = () => {
-  console.log('logseq-mermaid-plugin loaded');
+  console.log("logseq-mermaid-plugin loaded");
 
-  logseq.Editor.registerSlashCommand('Draw mermaid diagram', async () => {
+  callSettings();
+
+  logseq.Editor.registerSlashCommand("Draw mermaid diagram", async () => {
     await logseq.Editor.insertAtEditingCursor(
       `{{renderer :mermaid_${uniqueIdentifier()}}}`
     );
@@ -29,16 +32,16 @@ const main = () => {
 
   logseq.App.onMacroRendererSlotted(async ({ slot, payload }) => {
     const [type, colour] = payload.arguments;
-    const id = type.split('_')[1]?.trim();
+    const id = type.split("_")[1]?.trim();
     const mermaidId = `mermaid_${id}`;
 
-    if (!type.startsWith(':mermaid_')) return;
+    if (!type.startsWith(":mermaid_")) return;
 
     const dataBlock = await logseq.Editor.getBlock(payload.uuid, {
       includeChildren: true,
     });
 
-    const mermaidUUID = dataBlock.children[0]['uuid'];
+    const mermaidUUID = dataBlock.children[0]["uuid"];
 
     logseq.provideModel({
       async show() {
