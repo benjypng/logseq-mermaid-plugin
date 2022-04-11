@@ -1,8 +1,8 @@
 [[:gift_heart: Sponsor this project on Github](https://github.com/sponsors/hkgnp) or [:coffee: Get me a coffee](https://www.buymeacoffee.com/hkgnp.dev) if you like this plugin!
 
-> Important! ⚠: This plugin will send your mermaid code to an [ external server ](https://mermaid.ink) **if** you do not set up your own local mermaid.ink server. Instructions for setting up your own local mermaid.ink server can be found below.
+> Important! ⚠: This plugin will send your mermaid code to an [external server](https://mermaid.ink) **if** you do not set up your own local mermaid.ink server. Instructions for setting up your own local mermaid.ink server can be found [below](https://github.com/hkgnp/logseq-mermaid-plugin#using-with-your-own-local-mermaidink-server).
 
-# Overviewr
+# Overview
 
 This simple plugin allows you to quickly insert mermaid diagrams in your notes, using either an external server or you have the option of setting up your own local one.
 
