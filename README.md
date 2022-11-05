@@ -2,6 +2,8 @@
 
 > Important! ⚠: This plugin will send your mermaid code to an [external server](https://mermaid.ink) **if** you do not set up your own local mermaid.ink server. Instructions for setting up your own local mermaid.ink server can be found [below](https://github.com/hkgnp/logseq-mermaid-plugin#using-with-your-own-local-mermaidink-server).
 
+> The amazing xyhp915 built a local-only plugin that supports drawing of mermaid diagrams. Implentation is a lot smoother. [Link to the plugin](https://github.com/xyhp915/logseq-fenced-code-plus)
+
 # Overview
 
 This simple plugin allows you to quickly insert mermaid diagrams in your notes, using either an external server or you have the option of setting up your own local one.
