@@ -5,25 +5,24 @@
     "icon": "./icon.svg"
   },
   "name": "logseq-mermaid-plugin",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "",
   "main": "dist/index.html",
   "targets": {
     "main": false
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "parcel build --no-source-maps src/index.html --public-url ./"
+    "build": "rm -R dist && echo 'dist folder removed'; parcel build --no-source-maps src/index.html --public-url ./"
   },
   "keywords": [],
   "author": "hkgnp",
   "license": "MIT",
   "dependencies": {
-    "@logseq/libs": "^0.0.1-alpha.35",
-    "js-base64": "^3.7.2"
+    "@logseq/libs": "^0.0.14",
+    "js-base64": "^3.7.3"
   },
   "devDependencies": {
     "buffer": "^6.0.3",
-    "parcel": "^2.2.0"
+    "parcel": "^2.8.2"
   }
 }

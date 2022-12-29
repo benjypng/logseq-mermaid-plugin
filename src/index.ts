@@ -21,7 +21,7 @@ const main = () => {
 
     await logseq.Editor.insertBlock(
       currBlock.uuid,
-      `\`\`\`mermaid 
+      `\`\`\`mermaid
 \`\`\``,
       {
         sibling: false,
@@ -33,7 +33,7 @@ const main = () => {
   logseq.App.onMacroRendererSlotted(async ({ slot, payload }) => {
     const [type, colour] = payload.arguments;
     const id = type.split("_")[1]?.trim();
-    const mermaidId = `mermaid_${id}`;
+    const mermaidId = `mermaid_${id}_${slot}`;
 
     if (!type.startsWith(":mermaid_")) return;
 
