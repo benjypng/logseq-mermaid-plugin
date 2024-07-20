@@ -1,13 +1,17 @@
 import '@logseq/libs'
-import { handlePopup } from './handle-popup'
-import { settings } from './settings'
+
 import { BlockEntity } from '@logseq/libs/dist/LSPlugin.user'
 import { toBase64 } from 'js-base64'
+
+import { handlePopup } from './handle-popup'
+import css from './index.css?raw'
+import { settings } from './settings'
 
 const main = async () => {
   console.log('logseq-mermaid-plugin loaded')
   // Used to handle any popups
   handlePopup()
+  logseq.provideStyle(css)
 
   // Add disclaimer
   await logseq.UI.showMsg(
@@ -71,6 +75,10 @@ const main = async () => {
               throw new Error(error)
             })
         },
+        async pdf() {
+          loading = true
+          console.log('Hello world')
+        },
       })
       logseq.provideUI({
         key: mermaidId,
@@ -78,7 +86,7 @@ const main = async () => {
         reset: true,
         template: loading
           ? `Loading...`
-          : `<button id="${mermaidId}" data-on-click="render">Render Mermaid<button>`,
+          : `<button class="mermaid-btn" id="render-${mermaidId}" data-on-click="render">Render Mermaid<button><button class="mermaid-btn" id="pdf-${mermaidId}" data-on-click="generatePdf">PDF</button>`,
       })
     },
   )
