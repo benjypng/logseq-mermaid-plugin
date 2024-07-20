@@ -1,10 +1,9 @@
 import '@logseq/libs'
 
-import { BlockEntity } from '@logseq/libs/dist/LSPlugin.user'
-import { toBase64 } from 'js-base64'
-
 import { handlePopup } from './handle-popup'
 import css from './index.css?raw'
+import { generateImgString } from './libs/generate-img-string'
+import { checkValidTheme } from './services/check-if-theme'
 import { settings } from './settings'
 
 const main = async () => {
@@ -20,7 +19,9 @@ const main = async () => {
   )
 
   logseq.Editor.registerSlashCommand('Draw mermaid diagram', async (e) => {
-    await logseq.Editor.insertAtEditingCursor(`{{renderer :mermaid_${e.uuid}}}`)
+    await logseq.Editor.insertAtEditingCursor(
+      `{{renderer :mermaid_${e.uuid} #FFFFFF default}}`,
+    )
     // Create mermaid code block
     await logseq.Editor.insertBlock(
       e.uuid,
@@ -37,34 +38,28 @@ const main = async () => {
   logseq.App.onMacroRendererSlotted(
     async ({ slot, payload: { uuid, arguments: args } }) => {
       const mermaidId = `mermaid_${uuid}_${slot}`
+      const [type, colour, theme] = args![0]!.split(' ')
+      if (!type || !type.startsWith(':mermaid_')) return
 
-      const [type, colour] = args
+      const bgColour = colour?.startsWith('#')
+        ? colour.replace('#', '')
+        : `!${colour}`
 
-      if (!type.startsWith(':mermaid_')) return
+      const validTheme = checkValidTheme(theme)
 
       let loading = false
       logseq.provideModel({
         async render() {
           loading = true
+          const jsonString = await generateImgString(uuid)
 
-          const mermaidBlock = await logseq.Editor.getBlock(uuid, {
-            includeChildren: true,
-          })
-          const mermaidChildBlocks = mermaidBlock!.children
-          if (!mermaidChildBlocks || mermaidChildBlocks.length == 0) return
-          const [codeBlock] = mermaidChildBlocks
-          const codeBlockContent = (codeBlock as BlockEntity).content
-            .replace('```mermaid', '')
-            .replace('```', '')
-            .replace('\n', ' ')
-          const jsonString = toBase64(codeBlockContent, true)
-          if (jsonString == 'IA') return
-
-          fetch(`https://mermaid.ink/img/${jsonString}`)
+          fetch(
+            `${logseq.settings!.pathToMermaidServer}/img/${jsonString}?bgColor=${bgColour}&theme=${validTheme}`,
+          )
             .then((res) => {
               logseq.Editor.updateBlock(
                 uuid,
-                `<img src="${res.url}" />{{renderer ${type}}}`,
+                `<img src="${res.url}" />{{renderer ${type} ${colour} ${theme}}}`,
               )
             })
             .then(() => {
@@ -75,9 +70,12 @@ const main = async () => {
               throw new Error(error)
             })
         },
-        async pdf() {
+        async generatePdf() {
           loading = true
-          console.log('Hello world')
+          const jsonString = await generateImgString(uuid)
+          await logseq.App.openExternalLink(
+            `https://mermaid.ink/pdf/${jsonString}`,
+          )
         },
       })
       logseq.provideUI({
@@ -86,7 +84,7 @@ const main = async () => {
         reset: true,
         template: loading
           ? `Loading...`
-          : `<button class="mermaid-btn" id="render-${mermaidId}" data-on-click="render">Render Mermaid<button><button class="mermaid-btn" id="pdf-${mermaidId}" data-on-click="generatePdf">PDF</button>`,
+          : `<button class="mermaid-btn" id="render-${mermaidId}" data-on-click="render">Render Inline<button><button class="mermaid-btn" id="pdf-${mermaidId}" data-on-click="generatePdf">PDF</button>`,
       })
     },
   )
