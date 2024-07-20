@@ -1,28 +1,59 @@
 {
-  "logseq": {
-    "id": "logseq-mermaid-plugin",
-    "title": "logseq-mermaid-plugin",
-    "icon": "./icon.svg"
-  },
-  "name": "logseq-mermaid-plugin",
-  "version": "1.2.1",
-  "description": "",
-  "main": "dist/index.html",
-  "targets": {
-    "main": false
-  },
-  "scripts": {
-    "build": "rm -R dist && echo 'dist folder removed'; parcel build --no-source-maps src/index.html --public-url ./"
-  },
-  "keywords": [],
-  "author": "hkgnp",
-  "license": "MIT",
-  "dependencies": {
-    "@logseq/libs": "^0.0.14",
-    "js-base64": "^3.7.3"
-  },
-  "devDependencies": {
-    "buffer": "^6.0.3",
-    "parcel": "^2.8.2"
-  }
+	"name": "logseq-mermaid-plugin",
+	"author": "benjypng",
+	"description": "Create mermaid diagrams in image or PDF using mermaid.ink or your own local mermaid.ink server.",
+	"license": "MIT",
+	"logseq": {
+		"id": "logseq-mermaid-plugin",
+		"title": "logseq-mermaid-plugin",
+		"icon": "./icon.svg",
+		"main": "dist/index.html"
+	},
+	"scripts": {
+		"dev": "npx vite",
+		"build": "npx tsc && npx vite build",
+		"preview": "npx vite preview"
+	},
+	"release": {
+		"branches": [
+			"main"
+		],
+		"plugins": [
+			[
+				"@semantic-release/github",
+				{
+					"assets": [
+						"logseq-mermaid-plugin.zip"
+					]
+				}
+			]
+		]
+	},
+	"dependencies": {
+		"@logseq/libs": "^0.0.17",
+		"js-base64": "^3.7.7",
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.7.0",
+		"@types/eslint": "^8.56.10",
+		"@types/eslint-config-prettier": "^6.11.3",
+		"@types/eslint__js": "^8.42.3",
+		"@types/node": "^20.14.11",
+		"@types/react": "^18.3.3",
+		"@types/react-dom": "^18.3.0",
+		"@typescript-eslint/eslint-plugin": "^7.16.1",
+		"@typescript-eslint/parser": "^7.16.1",
+		"eslint": "^9.7.0",
+		"eslint-config-prettier": "^9.1.0",
+		"eslint-plugin-prettier": "^5.2.1",
+		"eslint-plugin-simple-import-sort": "^12.1.1",
+		"prettier": "^3.3.3",
+		"typescript": "^5.5.3",
+		"typescript-eslint": "^7.16.1",
+		"vite": "^5.3.4",
+		"vite-plugin-logseq": "^1.1.2",
+		"vite-tsconfig-paths": "^4.3.2"
+	}
 }
