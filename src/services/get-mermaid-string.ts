@@ -1,19 +1,22 @@
 import { BlockEntity } from '@logseq/libs/dist/LSPlugin'
-import { toBase64 } from 'js-base64'
 
-export const generateImgString = async (uuid: string) => {
+export const getMermaidString = async (uuid: string) => {
   const mermaidBlock = await logseq.Editor.getBlock(uuid, {
     includeChildren: true,
   })
-  const mermaidChildBlocks = mermaidBlock!.children
+  if (!mermaidBlock) return
+
+  const mermaidChildBlocks = mermaidBlock.children as BlockEntity[]
   if (!mermaidChildBlocks || mermaidChildBlocks.length == 0) return
+
   const [codeBlock] = mermaidChildBlocks
-  const codeBlockContent = (codeBlock as BlockEntity).content
+  if (!codeBlock) return
+
+  const codeBlockContent = codeBlock.content
     .replace('```mermaid', '')
     .replace('```', '')
     .replace('\n', ' ')
-  const jsonString = toBase64(codeBlockContent, true)
-  if (jsonString == 'IA') return
+  if (!codeBlockContent || codeBlockContent.length == 0) return
 
-  return jsonString
+  return codeBlockContent
 }
