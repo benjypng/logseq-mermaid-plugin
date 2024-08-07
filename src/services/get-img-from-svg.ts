@@ -1,3 +1,5 @@
+import { Base64 } from 'js-base64'
+
 export const getImgFromSvg = (
   svg: string,
   mermaidId: string,
@@ -36,5 +38,5 @@ export const getImgFromSvg = (
     throw new Error('Unable to load SVG')
   }
 
-  img.src = 'data:image/svg+xml;base64,' + btoa(svg)
+  img.src = 'data:image/svg+xml;base64,' + Base64.encode(svg)
 }

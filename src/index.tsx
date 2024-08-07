@@ -43,14 +43,26 @@ const main = async () => {
 
       const mermaidString = await getMermaidString(uuid)
       if (!mermaidString || mermaidString.length < 2) return
-      const { svg } = await host.mermaid.render(
-        'mermaid-diagram',
-        mermaidString,
-      )
 
-      setTimeout(async () => {
-        getImgFromSvg(svg, mermaidId, scale)
-      }, 100)
+      try {
+        const { svg } = await host.mermaid.render(
+          'mermaid-diagram',
+          mermaidString,
+        )
+
+        setTimeout(async () => {
+          getImgFromSvg(svg, mermaidId, scale)
+        }, 100)
+      } catch (error) {
+        console.log(error)
+        await logseq.UI.showMsg(
+          'Unable to generate mermaid diagram. There may be a typo somewhere.',
+          'error',
+        )
+        throw new Error(
+          'Unable to generate mermaid diagram. There may be a typo somewhere.',
+        )
+      }
     },
   )
 }
