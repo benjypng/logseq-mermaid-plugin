@@ -7,7 +7,9 @@ const main = async () => {
   console.log('logseq-mermaid-plugin loaded')
   const host = logseq.Experiments.ensureHostScope()
   await logseq.Experiments.loadScripts('../mermaid/mermaid.min.js')
-  host.mermaid.initialize({ startOnLoad: false })
+  setTimeout(() => {
+    host.mermaid.initialize({ startOnLoad: false })
+  }, 100)
 
   logseq.Editor.registerSlashCommand('Draw mermaid diagram', async (e) => {
     await logseq.Editor.insertAtEditingCursor(
