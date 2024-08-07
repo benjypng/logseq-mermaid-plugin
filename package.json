@@ -1,7 +1,7 @@
 {
   "name": "logseq-mermaid-plugin",
   "author": "benjypng",
-  "description": "Create mermaid diagrams in image or PDF using mermaid.ink or your own local mermaid.ink server.",
+  "description": "Create mermaid diagrams in image format on-the-fly.",
   "license": "MIT",
   "logseq": {
     "id": "logseq-mermaid-plugin",
