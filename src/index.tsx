@@ -22,6 +22,29 @@ const onRenderError = (error: unknown): never => {
   )
 }
 
+/**
+ * Ensure that the SVG is rendered as valid XML; otherwise embedded items like
+ * `<br>` will cause failures when the Canvas renders.
+ */
+const svgAsXml = (svg: string): string => {
+  const container = document.createElement('div')
+  document.body.appendChild(container) // Append the container to the document body
+  try {
+    container.innerHTML = svg
+    const svgElement = container.firstChild
+    if (svgElement === null) {
+      throw new Error('Expected an SVG element')
+    }
+
+    const xmlSerializer = new XMLSerializer()
+    const xml = xmlSerializer.serializeToString(svgElement)
+
+    return xml
+  } finally {
+    document.body.removeChild(container)
+  }
+}
+
 const main = async () => {
   console.log('logseq-mermaid-plugin loaded')
   const host = logseq.Experiments.ensureHostScope()
@@ -70,6 +93,7 @@ const main = async () => {
           'mermaid-diagram',
           mermaidString,
         )
+        const xml = svgAsXml(svg)
 
         setTimeout(async () => {
           // Passing through the error handler allows better messaging to the
