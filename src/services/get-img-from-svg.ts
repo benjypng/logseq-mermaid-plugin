@@ -4,6 +4,7 @@ export const getImgFromSvg = (
   svg: string,
   mermaidId: string,
   scale: number,
+  onError: (error: unknown) => void,
 ) => {
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')
@@ -21,7 +22,7 @@ export const getImgFromSvg = (
           mermaidId,
         ) as HTMLImageElement
         if (!targetImg) {
-          throw new Error(`Element '${mermaidId}' not found`)
+          onError( new Error(`Element '${mermaidId}' not found`))
         }
 
         targetImg.src = url
@@ -29,13 +30,13 @@ export const getImgFromSvg = (
           URL.revokeObjectURL(url)
         }
       } else {
-        throw new Error('Unable to create blob')
+        onError( new Error('Unable to create blob'))
       }
     }, 'image/png')
   }
 
   img.onerror = () => {
-    throw new Error('Unable to load SVG')
+    onError("Image rendering failed")
   }
 
   img.src = 'data:image/svg+xml;base64,' + Base64.encode(svg)
