@@ -3,6 +3,48 @@ import '@logseq/libs'
 import { getImgFromSvg } from './services/get-img-from-svg'
 import { getMermaidString } from './services/get-mermaid-string'
 
+/**
+ * Allow for consistent error handling, including in deferred contexts.
+ */
+const onRenderError = (error: unknown): never => {
+  console.log(error)
+
+  // ignore returned promise; an error showing an error is not importantß
+  logseq.UI.showMsg(
+    `Unable to generate mermaid diagram; there may be a typo somewhere.\nDetails: "${error}"`,
+    'error',
+  )
+
+  // throw an error with a bit of context
+  throw new Error(
+    'Unable to generate mermaid diagram. There may be a typo somewhere.',
+    { cause: error },
+  )
+}
+
+/**
+ * Ensure that the SVG is rendered as valid XML; otherwise embedded items like
+ * `<br>` will cause failures when the Canvas renders.
+ */
+const svgAsXml = (svg: string): string => {
+  const container = document.createElement('div')
+  document.body.appendChild(container) // Append the container to the document body
+  try {
+    container.innerHTML = svg
+    const svgElement = container.firstChild
+    if (svgElement === null) {
+      throw new Error('Expected an SVG element')
+    }
+
+    const xmlSerializer = new XMLSerializer()
+    const xml = xmlSerializer.serializeToString(svgElement)
+
+    return xml
+  } finally {
+    document.body.removeChild(container)
+  }
+}
+
 const main = async () => {
   console.log('logseq-mermaid-plugin loaded')
   const host = logseq.Experiments.ensureHostScope()
@@ -51,19 +93,15 @@ const main = async () => {
           'mermaid-diagram',
           mermaidString,
         )
+        const xml = svgAsXml(svg)
 
         setTimeout(async () => {
-          getImgFromSvg(svg, mermaidId, scale)
+          // Passing through the error handler allows better messaging to the
+          // user on image rendering failures.
+          getImgFromSvg(xml, mermaidId, scale, onRenderError)
         }, 100)
       } catch (error) {
-        console.log(error)
-        await logseq.UI.showMsg(
-          'Unable to generate mermaid diagram. There may be a typo somewhere.',
-          'error',
-        )
-        throw new Error(
-          'Unable to generate mermaid diagram. There may be a typo somewhere.',
-        )
+        onRenderError(error)
       }
     },
   )
