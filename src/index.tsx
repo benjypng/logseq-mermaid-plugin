@@ -7,10 +7,15 @@ const main = async () => {
   console.log('logseq-mermaid-plugin loaded')
   const host = logseq.Experiments.ensureHostScope()
   await logseq.Experiments.loadScripts('../mermaid/mermaid.min.js')
-  setTimeout(() => {
-    host.mermaid.initialize({ startOnLoad: false })
-  }, 1000)
+  const appUserConfigs = await logseq.App.getUserConfigs();
 
+  setTimeout(() => {
+    host.mermaid.initialize({ 
+        startOnLoad: false,
+        theme: appUserConfigs.preferredThemeMode == 'dark' ? 'dark' : 'default',
+    })
+  }, 1000)
+  
   logseq.Editor.registerSlashCommand('Draw mermaid diagram', async (e) => {
     await logseq.Editor.insertAtEditingCursor(
       `{{renderer :mermaid_${e.uuid}, 3}}`,
