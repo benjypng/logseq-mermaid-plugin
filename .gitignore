@@ -119,3 +119,6 @@ dist
 .yarn/install-state.gz
 .pnp.*
 .DS_Store
+
+# Ignore mermaid temporary updates directory.
+mermaid-update

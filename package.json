@@ -12,7 +12,8 @@
   "scripts": {
     "dev": "npx vite",
     "build": "npx tsc && npx vite build",
-    "preview": "npx vite preview"
+    "preview": "npx vite preview",
+    "update-mermaid": "npm --prefix mermaid-update install mermaid && cp mermaid-update/node_modules/mermaid/dist/mermaid.min.js mermaid"
   },
   "release": {
     "branches": [
