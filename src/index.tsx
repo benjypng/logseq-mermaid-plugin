@@ -25,7 +25,7 @@ const main = async () => {
         before: false,
       },
     )
-    logseq.Editor.exitEditingMode(true)
+    await logseq.Editor.exitEditingMode(true)
   })
 
   logseq.App.onMacroRendererSlotted(
