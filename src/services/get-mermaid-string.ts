@@ -11,11 +11,13 @@ export const getMermaidString = async (uuid: string) => {
 
   const [codeBlock] = mermaidChildBlocks
   if (!codeBlock) return
-
+  if(codeBlock.content == null) return 
+    
   const codeBlockContent = codeBlock.content
     .replace('```mermaid', '')
     .replace('```', '')
     .replace('\n', ' ')
+  
   if (!codeBlockContent || codeBlockContent.length == 0) return
 
   return codeBlockContent
