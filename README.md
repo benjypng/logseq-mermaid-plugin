@@ -36,6 +36,8 @@ The following diagram types rely on `foreignObject` and will not render with thi
 - ❌ Class Diagrams (if they use complex text wrapping)
 - ❌ Flowcharts using HTML labels (e.g., `<b>Bold Text</b>`)
 
+If the above are required, you may try the [other Mermaid plugin](https://github.com/xyhp915/logseq-fenced-code-plus) in the marketplace.
+
 ## ☕️ Support
 If you enjoy this plugin, please consider supporting the development!
 
