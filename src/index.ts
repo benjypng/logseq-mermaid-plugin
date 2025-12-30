@@ -1,15 +1,17 @@
 import '@logseq/libs'
 
-import { getImgFromSvg } from './utils/get-img-from-svg'
-import { getMermaidString } from './utils/get-mermaid-string'
+import {
+  getImgFromSvg,
+  getMermaidString,
+  mermaidInitAndChangeTheme,
+} from './utils'
 
 const main = async () => {
   const host = logseq.Experiments.ensureHostScope()
   await logseq.Experiments.loadScripts('../mermaid/mermaid.min.js')
-  setTimeout(() => {
-    host.mermaid.initialize({ startOnLoad: false })
-    logseq.UI.showMsg('logseq-mermaid-plugin loaded')
-  }, 50)
+
+  const userConfigs = await logseq.App.getUserConfigs()
+  mermaidInitAndChangeTheme(host, userConfigs.preferredThemeMode)
 
   logseq.Editor.registerSlashCommand(
     'Mermaid: Draw mermaid diagram',
@@ -29,12 +31,19 @@ const main = async () => {
     },
   )
 
+  logseq.App.onThemeModeChanged(({ mode }) => {
+    mermaidInitAndChangeTheme(host, mode)
+  })
+
   logseq.App.onMacroRendererSlotted(
     async ({ slot, payload: { uuid, arguments: args } }) => {
       const [type, scaleArg] = args
       if (!type || !type.startsWith(':mermaid_')) return
 
       const scale = scaleArg ? parseFloat(scaleArg) : 3
+
+      const userConfigs = await logseq.App.getUserConfigs()
+      mermaidInitAndChangeTheme(host, userConfigs.preferredThemeMode)
 
       const mermaidId = `mermaid_${uuid}`
       const existingEl = parent.document.getElementById(mermaidId)
