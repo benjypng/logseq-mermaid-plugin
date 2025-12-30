@@ -1,15 +1,15 @@
 import eslint from '@eslint/js'
+import { defineConfig } from 'eslint/config'
 import prettierConfig from 'eslint-config-prettier'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 import tseslint from 'typescript-eslint'
 
-export default tseslint.config(
+export default defineConfig(
   eslint.configs.recommended,
-  ...tseslint.configs.stylistic,
-  ...tseslint.configs.recommended,
-  prettierConfig,
+  tseslint.configs.recommended,
+  tseslint.configs.stylistic,
   {
-    ignores: ['**/dist/'],
+    ignores: ['**/dist/', '**/mermaid/'],
   },
   {
     plugins: {
@@ -25,4 +25,5 @@ export default tseslint.config(
       ],
     },
   },
+  prettierConfig,
 )

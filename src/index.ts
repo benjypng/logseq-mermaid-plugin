@@ -1,47 +1,52 @@
 import '@logseq/libs'
 
-import { getImgFromSvg } from './services/get-img-from-svg'
-import { getMermaidString } from './services/get-mermaid-string'
+import { getImgFromSvg } from './utils/get-img-from-svg'
+import { getMermaidString } from './utils/get-mermaid-string'
 
 const main = async () => {
-  console.log('logseq-mermaid-plugin loaded')
   const host = logseq.Experiments.ensureHostScope()
   await logseq.Experiments.loadScripts('../mermaid/mermaid.min.js')
   setTimeout(() => {
     host.mermaid.initialize({ startOnLoad: false })
-  }, 1000)
+    logseq.UI.showMsg('logseq-mermaid-plugin loaded')
+  }, 50)
 
-  logseq.Editor.registerSlashCommand('Draw mermaid diagram', async (e) => {
-    await logseq.Editor.insertAtEditingCursor(
-      `{{renderer :mermaid_${e.uuid}, 3}}`,
-    )
-    // Create mermaid code block
-    await logseq.Editor.insertBlock(
-      e.uuid,
-      `\`\`\`mermaid
+  logseq.Editor.registerSlashCommand(
+    'Mermaid: Draw mermaid diagram',
+    async (e) => {
+      await logseq.Editor.insertAtEditingCursor(
+        `{{renderer :mermaid_${e.uuid}, 3}}`,
+      )
+      await logseq.Editor.insertBlock(
+        e.uuid,
+        `\`\`\`mermaid
 \`\`\``,
-      {
-        sibling: false,
-        before: false,
-      },
-    )
-    logseq.Editor.exitEditingMode(true)
-  })
+        {
+          sibling: false,
+        },
+      )
+      await logseq.Editor.exitEditingMode(false)
+    },
+  )
 
   logseq.App.onMacroRendererSlotted(
     async ({ slot, payload: { uuid, arguments: args } }) => {
-      const mermaidId = `mermaid_${uuid}_${slot}`
       const [type, scaleArg] = args
       if (!type || !type.startsWith(':mermaid_')) return
 
       const scale = scaleArg ? parseFloat(scaleArg) : 3
 
-      logseq.provideUI({
-        key: mermaidId,
-        slot,
-        reset: true,
-        template: `<img id="${mermaidId}" />`,
-      })
+      const mermaidId = `mermaid_${uuid}`
+      const existingEl = parent.document.getElementById(mermaidId)
+
+      if (!existingEl) {
+        logseq.provideUI({
+          key: mermaidId,
+          slot,
+          reset: true,
+          template: `<img id="${mermaidId}" style="cursor: pointer"/>`,
+        })
+      }
 
       const mermaidString = await getMermaidString(uuid)
       if (!mermaidString || mermaidString.length < 2) return
@@ -54,16 +59,13 @@ const main = async () => {
 
         setTimeout(async () => {
           getImgFromSvg(svg, mermaidId, scale)
-        }, 100)
+        }, 0)
       } catch (error) {
-        console.log(error)
-        await logseq.UI.showMsg(
+        logseq.UI.showMsg(
           'Unable to generate mermaid diagram. There may be a typo somewhere.',
           'error',
         )
-        throw new Error(
-          'Unable to generate mermaid diagram. There may be a typo somewhere.',
-        )
+        throw new Error(String(error))
       }
     },
   )
