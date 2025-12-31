@@ -19,15 +19,16 @@ const main = async () => {
       await logseq.Editor.insertAtEditingCursor(
         `{{renderer :mermaid_${e.uuid}, 3}}`,
       )
-      await logseq.Editor.insertBlock(
-        e.uuid,
-        `\`\`\`mermaid
+      setTimeout(async () => {
+        await logseq.Editor.insertBlock(
+          e.uuid,
+          `\`\`\`mermaid
 \`\`\``,
-        {
-          sibling: false,
-        },
-      )
-      await logseq.Editor.exitEditingMode(false)
+          {
+            sibling: false,
+          },
+        )
+      }, 10)
     },
   )
 
