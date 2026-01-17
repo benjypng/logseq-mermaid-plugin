@@ -10,9 +10,9 @@ export const getMermaidString = async (uuid: string) => {
   if (!mermaidChildBlocks || mermaidChildBlocks.length == 0) return;
 
   const [codeBlock] = mermaidChildBlocks;
-  if (!codeBlock) return;
+  if (!codeBlock || !codeBlock.content) return;
 
-  const codeBlockContent = codeBlock.title
+  const codeBlockContent = codeBlock.content
     .replace("```mermaid", "")
     .replace("```", "")
     .replace("\n", " ");
