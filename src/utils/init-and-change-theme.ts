@@ -7,6 +7,7 @@ enum Theme {
 }
 
 export const mermaidInitAndChangeTheme = (
+  // biome-ignore lint/suspicious/noExplicitAny: host type is complex/unknown coming from library
   host: any,
   theme: 'dark' | 'light',
 ) => {
