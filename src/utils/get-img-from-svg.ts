@@ -10,13 +10,24 @@ export const getImgFromSvg = (
   const img = new Image()
   if (!ctx || !img) return
 
-  img.onload = () => {
-    const scaledWidth = img.width * scale
-    const scaledHeight = img.height * scale
-    canvas.width = scaledWidth
-    canvas.height = scaledHeight
+  // Get device pixel ratio for high-DPI displays (e.g., Retina)
+  const dpr = window.devicePixelRatio || 1
 
-    ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight)
+  img.onload = () => {
+    // Calculate display size (CSS pixels)
+    const displayWidth = img.width * scale
+    const displayHeight = img.height * scale
+
+    // Calculate actual canvas size (physical pixels) for crisp rendering
+    const canvasWidth = displayWidth * dpr
+    const canvasHeight = displayHeight * dpr
+
+    canvas.width = canvasWidth
+    canvas.height = canvasHeight
+
+    // Scale the context to account for device pixel ratio
+    ctx.scale(dpr, dpr)
+    ctx.drawImage(img, 0, 0, displayWidth, displayHeight)
 
     const dataUrl = canvas.toDataURL('image/png')
 
@@ -29,6 +40,9 @@ export const getImgFromSvg = (
     }
 
     targetImg.src = dataUrl
+    // Set CSS size to maintain proper display dimensions
+    targetImg.style.width = `${displayWidth}px`
+    targetImg.style.height = `${displayHeight}px`
   }
 
   img.onerror = () => {
